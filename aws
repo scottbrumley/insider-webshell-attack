@@ -1,0 +1,10 @@
+webservers:
+  hosts:
+    ubuntu-web-pr: 
+      ansible_host: 54.172.246.223  
+      ansible_user: ubuntu 
+      ansible_ssh_private_key_file: ./xdr.pem
+    ubuntu-web-dr: 
+      ansible_host: 100.25.132.99 
+      ansible_user: ubuntu 
+      ansible_ssh_private_key_file: ./xdr.pem

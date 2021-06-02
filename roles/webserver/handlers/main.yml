@@ -1,0 +1,23 @@
+- name: restart-apache
+  become: yes
+  become_method: sudo
+  ansible.builtin.systemd:
+    name: apache2
+    state: restarted
+    daemon_reload: yes
+  when: ansible_os_family == "Debian"
+- name: restart-apache
+  become: yes
+  become_method: sudo
+  ansible.builtin.systemd:
+    name: httpd
+    state: restarted
+    daemon_reload: yes
+  when: ansible_os_family == "RedHat"
+- name: restart-ssh
+  become: yes
+  become_method: sudo
+  ansible.builtin.service:
+    name: sshd 
+    state: restarted
+    daemon_reload: yes

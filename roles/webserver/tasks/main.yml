@@ -1,0 +1,184 @@
+---
+#- name: Print all available facts
+#    ansible.builtin.debug:
+#      var: ansible_facts
+  - name: Set a hostname
+    become: true
+    become_method: sudo
+    ansible.builtin.hostname:
+      name: "{{ inventory_hostname }}" 
+
+  #Apache Configuration
+  - name: Install Debian LAMP Packages
+    become: true
+    become_method: sudo
+    apt: name={{ item }} update_cache=yes state=latest
+    loop: [ 'apache2', 'mysql-server', 'python3-pymysql', 'php', 'php-mysql', 'libapache2-mod-php' ]
+    when: ansible_os_family == "Debian"
+  
+  #Apache Configuration
+  - name: Install Amazon AMI LAMP Packages
+    become: true
+    become_method: sudo
+    yum: name={{ item }} update_cache=yes state=latest
+    loop: [ 'php', 'php-fpm','php-mysql' ]
+    when: ansible_os_family == "RedHat"
+
+  - name: Create Apache user
+    become: true
+    become_method: sudo
+    ansible.builtin.user:
+      name: apache 
+      password: "{{ lab_pass }}"
+      state: present
+
+  - name: Add user "apache" to sudo
+    become: true
+    become_method: sudo
+    ansible.builtin.lineinfile:
+      path: /etc/sudoers.d/apache
+      regexp: '^apache '
+      line: 'apache ALL=(ALL) NOPASSWD: ALL'
+      state: present
+      mode: 0440
+      create: yes
+      validate: 'visudo -cf %s'
+
+  - name: Create Magnifier user
+    become: true
+    become_method: sudo
+    ansible.builtin.user:
+      name: magnifier
+      password: "{{ lab_pass }}"
+      state: present
+
+  - name: Add user "magnifier" to sudo
+    become: true
+    become_method: sudo
+    ansible.builtin.lineinfile:
+      path: /etc/sudoers.d/magnifier
+      regexp: '^magnifier '
+      line: 'magnifier ALL=(ALL) NOPASSWD: ALL'
+      state: present
+      mode: 0440
+      create: yes
+      validate: 'visudo -cf %s'
+
+
+  - name: Copy getevil.php 
+    become: true
+    become_method: sudo
+    ansible.builtin.copy:
+      src: "getevil.php"
+      dest: "/var/www/html/"
+      owner: apache
+      group: apache
+      mode: u+rw,g+wx,o+rwx
+    when: "'ubuntu-web-pr' in inventory_hostname"
+
+  - name: Change /var/www/html 
+    become: true
+    become_method: sudo
+    ansible.builtin.file:
+      path: /var/www/html
+      state: directory
+      recurse: yes
+      owner: apache
+      group: apache
+      mode: u+rwx,g+rwx,o+rx 
+
+  - name: Copy mirror-web-server.sh 
+    become: true
+    become_method: sudo
+    ansible.builtin.copy:
+      src: "mirror-web-server.sh"
+      dest: "/usr/local/sbin/"
+      owner: apache
+      group: apache
+      mode: u+rwx,g+rwx,o+rx
+    when: "'ubuntu-web-pr' in inventory_hostname"
+
+  - name: Run Backup every 5 minutes 
+    become: true
+    become_method: sudo 
+    ansible.builtin.cron:
+      name: "Copy Web To DR"
+      user: "apache"
+      minute: "*/5"
+      job: "/usr/local/sbin/mirror-web-server.sh"
+    when: "'ubuntu-web-pr' in inventory_hostname"
+
+  - name: Create .ssh
+    become: true
+    become_method: sudo
+    file:
+      path: /home/apache/.ssh
+      owner: apache 
+      group: apache 
+      mode: 0700
+      state: directory
+
+  - name: Generate an OpenSSH keypair with the default values (4096 bits, rsa)
+    become: true
+    become_method: sudo
+    openssh_keypair:
+      path: /home/apache/.ssh/id_rsa
+      owner: apache 
+      group: apache 
+    when: "'ubuntu-web-pr' in inventory_hostname"
+
+  - name: Fix owner of the generated pub key
+    become: true
+    become_method: sudo
+    file:
+      path: /home/apache/.ssh/id_rsa.pub
+      owner: apache 
+      group: apache 
+    when: "'ubuntu-web-pr' in inventory_hostname"
+ 
+  - name: Get Pub SSH File 
+    become: true
+    become_method: sudo
+    ansible.builtin.fetch:
+      src: /home/apache/.ssh/id_rsa.pub 
+      dest: /tmp/id_rsa.pub 
+    when: "'ubuntu-web-pr' in inventory_hostname"
+
+  - name: Copy Public file to DR 
+    become: true
+    become_method: sudo
+    ansible.builtin.copy:
+      src: "/tmp/id_rsa.pub/ubuntu-web-pr/home/apache/.ssh/id_rsa.pub"
+      dest: "/home/apache/.ssh/authorized_keys"
+      owner: apache
+      group: apache
+      mode: 0644 
+    when: "'ubuntu-web-dr' in inventory_hostname"
+
+  - name: Set up SSH Configuration 
+    become: true
+    become_method: sudo
+    ansible.builtin.copy:
+      src: "ssh_config"
+      dest: "/etc/ssh/"
+    notify: restart-ssh
+    when: "'ubuntu-web-pr' in inventory_hostname"
+
+  - name: Set up Apache Configuration 
+    become: true
+    become_method: sudo
+    ansible.builtin.copy:
+      src: "apache2.conf"
+      dest: "/etc/apache2/"
+    notify: restart-apache
+
+  - name: XDR Client To Host 
+    become: true
+    become_method: sudo
+    ansible.builtin.copy:
+      src: "linux-7-4-0.sh"
+      dest: "/home/magnifier"
+      owner: apache
+      group: apache
+      mode: 0755 
+

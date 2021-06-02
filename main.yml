@@ -1,0 +1,14 @@
+---
+# file: main.yml
+# Builds the DC and configures
+- hosts: webservers 
+  gather_facts: True 
+  vars_prompt:
+    - name: lab_pass
+      prompt: Lab Password
+      private: yes
+      encrypt: sha512_crypt
+      confirm: yes
+      salt_size: 7
+  roles:
+    - role: webserver
