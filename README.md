@@ -1,7 +1,7 @@
 Insider Webshell Attack
 =======================
 
-![Attack Design](https://github.com/scottbrumley/images/blob/main/insider-webshell-attack.png)
+![Attack Design](https://github.com/scottbrumley/images/blob/80c3840e1d0fc3abf76b03de3ab9d68d3ea7fcfc/insider-webshell-attack.png)
 
 The Attack
 ------------------
