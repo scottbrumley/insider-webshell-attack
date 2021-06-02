@@ -1,6 +1,8 @@
 Insider Webshell Attack
 =======================
 
+![Attack Design](https://github.com/scottbrumley/images/blob/main/insider-webshell-attack.png)
+
 The Attack
 ------------------
 >1. Login with magnifier on ubuntu-web-pr
