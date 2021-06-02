@@ -47,14 +47,28 @@ Environment
 >	Install Apache with PHP on Both Servers:
 >	- sudo apt install php libapache2-mod-php
   
-**Attacker Remote Console**
+**One Attacker Remote Console**
 >VSphere:
 >	CPU: 1 
 >	Memory: 4 GB
 >	Disk: 20 GB
 >AWS:
 >  t2.micro
-  
+>Default Packages Needed: 
+>	- nc 
+
+** WebBrowser for Attack
+>Any Web Browser will do
+
+Build Environment (Requires Ansible)
+-----------------
+-Stand Up the Three Ubuntu Servers
+-Edit the aws file with the correct Webserver addresses
+-Add your AWS Key to the root folder (named: xdr.pem)
+-Add your XDR installer to webshell/roles/webserver/files (named: linux-7-4-0.sh)
+-Edit webshell/roles/webserver/files/mirror-web-server.sh (change IP to web-dr local IP in AWS)
+-ansible-playbook -i aws main.yml
+
 **Attacker Remote**
 >Any machine with a webbrowser
   
