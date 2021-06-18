@@ -29,6 +29,10 @@ The Attack
 >21. On ubuntu-web-pr - rm /var/www/html/passwd
 >22. On ubuntu-web-pr - rm /var/www/html/shadow
 
+Video
+-----
+[![](https://i9.ytimg.com/vi/KGj6jEwkWOQ/mq1.jpg?sqp=CIzms4YG&rs=AOn4CLC2_hC-nKKXCXNmFTVKpeT_TX57uw)](https://youtu.be/KGj6jEwkWOQ "Insider Webshell Attack")
+
 
 Environment
 -----------
