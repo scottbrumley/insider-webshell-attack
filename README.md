@@ -31,8 +31,7 @@ The Attack
 
 Video
 -----
-[![](https://i9.ytimg.com/vi/KGj6jEwkWOQ/mq1.jpg?sqp=CIzms4YG&rs=AOn4CLC2_hC-nKKXCXNmFTVKpeT_TX57uw)](https://youtu.be/KGj6jEwkWOQ "Insider Webshell Attack")
-
+[![Insider Webshell Attack](https://i9.ytimg.com/vi/KGj6jEwkWOQ/mq1.jpg)](https://youtu.be/KGj6jEwkWOQ)
 
 Environment
 -----------
